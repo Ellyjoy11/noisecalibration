@@ -20,10 +20,11 @@ public class MainActivity extends Activity {
     private final String TAG = "Flipper App";
     String pathToImages = "/sdcard/ImagesForApp";
     String imgType = "all";
+    int flipTime = 3000;
     ArrayList<String> mFiles = new ArrayList<String>();
 
     //intent to run app from command line is
-    // adb shell am start -a android.intent.action.VIEW -c android.intent.category.DEFAULT -e path /sdcard/ImagesForApp1 -e type jpg -n com.elena.noisecalibration/com.elena.noisecalibration.MainActivity
+    // adb shell am start -a android.intent.action.VIEW -c android.intent.category.DEFAULT -e path /sdcard/ImagesForApp1 -e type jpg -e delay 3000 -n com.elena.noisecalibration/com.elena.noisecalibration.MainActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +50,15 @@ public class MainActivity extends Activity {
                 imgType = "all";
             }
             Log.d(TAG, "Image type is " + imgType);
+
+            if (cmdExtras.containsKey("delay")) {
+                flipTime = Integer.parseInt(cmdExtras.getString("delay"));
+            } else {
+                flipTime = 3000;
+            }
+            Log.d(TAG, "Flip interval: " + flipTime + " ms");
         } else {
-            Log.d (TAG, "No extras in cmd line, defaults: path=" + pathToImages + "; type=all");
+            Log.d (TAG, "No extras in cmd line, defaults: path=" + pathToImages + "; type=all; time interval=" + flipTime + "ms");
         }
 
 
@@ -65,6 +73,8 @@ public class MainActivity extends Activity {
         } else {
             Log.d(TAG, "no files in folder");
         }
+
+        mFlipper.setFlipInterval(flipTime);
 
     }
 
